@@ -1,8 +1,18 @@
+// lib/presentation/auth/screens/login_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../data/repository/auth_repository.dart';
-import '../bloc/login_bloc.dart';
-import '../../home/screens/home_screen.dart';
+import '../../../data/repository/order_repository.dart';
+import '../../home/order/order_bloc.dart';
+import '../../home/screens/admin_dashboard_screen.dart';
+import '../../home/screens/customer_dashboard_screen.dart';
+import '../../home/screens/technician_dashboard_screen.dart';
+import '../login/login_bloc.dart';
+import 'register_screen.dart';
+import '../../home/admin_order/admin_order_bloc.dart';
+import '../../home/technician_job/technician_job_bloc.dart';
+import '../../../data/repository/category_repository.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,7 +23,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
-  final _passwordController = TextEditingController.fromValue(TextEditingValue(text: "password"));
+  final _passwordController = TextEditingController();
 
   @override
   void dispose() {
@@ -31,16 +41,44 @@ class _LoginScreenState extends State<LoginScreen> {
         body: BlocListener<LoginBloc, LoginState>(
           listener: (context, state) {
             if (state is LoginSuccess) {
-              Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const HomeScreen()),
-            );
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Login Berhasil!'),
-                  backgroundColor: Colors.green,
-                ),
-              );
+              // Logika pengecekan peran (role)
+              if (state.user.role == 'admin') {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => AdminOrderBloc(
+                        orderRepository: OrderRepository(),
+                        categoryRepository: CategoryRepository(), // <-- Tambahkan ini
+                      )..add(FetchAdminDashboardData()), // Panggil event
+                      child: const AdminDashboardScreen(),
+                    ),
+                  ),
+                );
+              } else if (state.user.role == 'technician') {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => TechnicianJobBloc(orderRepository: OrderRepository())
+                        ..add(FetchTechnicianJobs()), // Panggil event
+                      child: const TechnicianDashboardScreen(),
+                    ),
+                  ),
+                );
+              } else { // Pelanggan
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) =>
+                          OrderBloc(orderRepository: OrderRepository())
+                          ..add(FetchCustomerOrders()),
+                      child: const CustomerDashboardScreen(),
+                    ),
+                  ),
+                );
+              }
             } else if (state is LoginFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -94,6 +132,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     );
                   },
                 ),
+                const SizedBox(height: 16), // Beri jarak
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const RegisterPage()),
+                    );
+                  },
+                  child: const Text('Belum punya akun? Daftar di sini'),
+                )
               ],
             ),
           ),

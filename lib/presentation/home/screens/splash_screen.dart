@@ -6,9 +6,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../home/screens/admin_dashboard_screen.dart';
 import '../../home/screens/customer_dashboard_screen.dart';
 import '../../home/screens/technician_dashboard_screen.dart';
-import '../../home/bloc/order_bloc.dart';
+import '../order/order_bloc.dart';
 import '../../../data/repository/order_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../home/admin_order/admin_order_bloc.dart';
+import '../technician_job/technician_job_bloc.dart';
+import '../../../data/repository/category_repository.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -39,9 +42,29 @@ class _SplashScreenState extends State<SplashScreen> {
       final role = user['role'];
 
       if (role == 'admin') {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const AdminDashboardScreen()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) => AdminOrderBloc(
+                orderRepository: OrderRepository(),
+                categoryRepository: CategoryRepository(), // <-- Tambahkan ini
+              )..add(FetchAdminDashboardData()), // Panggil event
+              child: const AdminDashboardScreen(),
+            ),
+          ),
+        );
       } else if (role == 'technician') {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const TechnicianDashboardScreen()));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) => TechnicianJobBloc(orderRepository: OrderRepository())
+                ..add(FetchTechnicianJobs()), // Panggil event
+              child: const TechnicianDashboardScreen(),
+            ),
+          ),
+        );
       } else {
         Navigator.pushReplacement(
           context,
