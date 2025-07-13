@@ -77,7 +77,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             // Isi form dengan data yang berhasil dimuat
             _nameController.text = state.user.name;
             _emailController.text = state.user.email;
-            _phoneController.text = state.user.role; // Asumsi phone number ada di role (perbaiki jika perlu)
+            _phoneController.text = state.user.phoneNumber ?? ''; // Gunakan phoneNumber, bukan role
           }
           if (state is ProfileUpdateSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(

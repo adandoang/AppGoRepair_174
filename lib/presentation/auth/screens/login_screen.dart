@@ -38,6 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
       create: (context) => LoginBloc(authRepository: AuthRepository()),
       child: Scaffold(
         appBar: AppBar(title: const Text('Login GoRepair')),
+        resizeToAvoidBottomInset: true,
         body: BlocListener<LoginBloc, LoginState>(
           listener: (context, state) {
             if (state is LoginSuccess) {
@@ -88,11 +89,63 @@ class _LoginScreenState extends State<LoginScreen> {
               );
             }
           },
-          child: Padding(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height - 200,
+              ),
+              child: IntrinsicHeight(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                // Logo Repair
+                Container(
+                  margin: const EdgeInsets.only(bottom: 32),
+                  child: Column(
+                    children: [
+                      // Icon Repair dengan background
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: Color(0xFF60A5FA),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0xFF60A5FA).withOpacity(0.3),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.build_circle,
+                          color: Colors.white,
+                          size: 40,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      // Text Logo
+                      Text(
+                        'GoRepair',
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF60A5FA),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Solusi Perbaikan Terpercaya',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 TextField(
                   controller: _emailController,
                   decoration: const InputDecoration(
@@ -144,9 +197,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 )
               ],
             ),
-          ),
-        ),
-      ),
-    );
+          ), // IntrinsicHeight
+        ), // ConstrainedBox
+      ), // SingleChildScrollView
+    ), // BlocListener
+  ), // Scaffold
+); // BlocProvider
   }
 }

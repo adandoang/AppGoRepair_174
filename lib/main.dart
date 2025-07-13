@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gorepair_app/presentation/home/screens/splash_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,24 +13,54 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'GoRepair',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Color(0xFF60A5FA),
+          primary: Color(0xFF60A5FA),
+          secondary: Color(0xFF10b981),
+          background: Color(0xFFF8FAFC),
+          surface: Colors.white,
+        ),
+        textTheme: GoogleFonts.interTextTheme(),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.white,
+          elevation: 1,
+          iconTheme: IconThemeData(color: Color(0xFF60A5FA)),
+          titleTextStyle: GoogleFonts.inter(
+            color: Color(0xFF60A5FA),
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        cardTheme: CardThemeData(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          elevation: 3,
+          margin: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+          color: Colors.white,
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Color(0xFF60A5FA),
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            textStyle: GoogleFonts.inter(fontWeight: FontWeight.w600),
+            elevation: 2,
+          ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          filled: true,
+          fillColor: Color(0xFFF1F5F9),
+          labelStyle: GoogleFonts.inter(),
+        ),
+        snackBarTheme: SnackBarThemeData(
+          backgroundColor: Color(0xFF60A5FA),
+          contentTextStyle: GoogleFonts.inter(color: Colors.white),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          behavior: SnackBarBehavior.floating,
+        ),
       ),
       home: const SplashScreen(),
     );
